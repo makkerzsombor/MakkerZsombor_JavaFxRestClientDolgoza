@@ -8,7 +8,7 @@ import javafx.scene.control.*;
 
 import java.io.IOException;
 
-public class CreatePeopleController {
+public class CreatePeopleController extends Controller{
 
     @FXML
     private Button submitButton;
@@ -59,10 +59,5 @@ public class CreatePeopleController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-    private void warning(String headerText) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setHeaderText(headerText);
-        alert.showAndWait();
     }
 }
