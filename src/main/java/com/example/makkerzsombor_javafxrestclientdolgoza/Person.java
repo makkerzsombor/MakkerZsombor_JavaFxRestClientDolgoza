@@ -7,7 +7,9 @@ public class Person {
 
     @Expose
     private String name;
+    @Expose
     private int age, height;
+    @Expose
     private boolean married;
 
     public Person(int id, String name, int age, boolean married, int height) {

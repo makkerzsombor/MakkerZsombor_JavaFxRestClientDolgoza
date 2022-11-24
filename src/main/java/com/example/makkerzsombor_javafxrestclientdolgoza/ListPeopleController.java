@@ -4,13 +4,14 @@ import com.google.gson.Gson;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class ListPeopleController extends Controller{
 
@@ -61,7 +62,23 @@ public class ListPeopleController extends Controller{
 
     @FXML
     public void insertClick(ActionEvent actionEvent) {
-
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("create-people-view.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 800, 480);
+            Stage stage = new Stage();
+            stage.setTitle("Create People");
+            stage.setScene(scene);
+            stage.showAndWait();
+            stage.setOnCloseRequest(event -> {
+                try {
+                    loadPeopleFromServer();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        } catch (IOException e) {
+            error("Could not load form", e.getMessage());
+        }
     }
 
     @FXML
@@ -71,6 +88,28 @@ public class ListPeopleController extends Controller{
 
     @FXML
     public void deleteClick(ActionEvent actionEvent) {
-
+        int selectedIndex = peopleTable.getSelectionModel().getSelectedIndex();
+        if (selectedIndex == -1){
+            warning("Please select a person from the list first!");
+            return;
+        }
+        Person selected = peopleTable.getSelectionModel().getSelectedItem();
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setHeaderText(String.format("Are you sure you want to delete %s?", selected.getName()));
+        Optional<ButtonType> optionalButtonType = confirmation.showAndWait();
+        if (optionalButtonType.isEmpty()){
+            System.err.println("Unknown error has occurred!");
+            return;
+        }
+        ButtonType clickedButton = optionalButtonType.get();
+        if (clickedButton.equals(ButtonType.OK)){
+            String url = App.BASE_URL + "/" + selected.getId();
+            try {
+                RequestHandler.delete(url);
+                loadPeopleFromServer();
+            } catch (IOException e) {
+                error("An error occurred while communicating with the server");
+            }
+        }
     }
 }
