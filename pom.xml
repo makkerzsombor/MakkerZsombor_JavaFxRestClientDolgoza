@@ -61,7 +61,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.example.makkerzsombor_javafxrestclientdolgoza/com.example.makkerzsombor_javafxrestclientdolgoza.HelloApplication
+                                com.example.makkerzsombor_javafxrestclientdolgoza/com.example.makkerzsombor_javafxrestclientdolgoza.App
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
